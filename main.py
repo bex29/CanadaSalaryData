@@ -35,25 +35,6 @@ def calculateTotalAverageCanada(csvFileInput):
         print(f"total number of inputs '{numberOfInputs}'. Number of ignored inputs {numberOfErrorInputs}")
         return int(total_salary / count) if count > 0 else 0
 
-
-# Original function I wrote for the provincial average with original comments
-# def calculateTotalAverageProvince(csvFileInput, provinceName):
-#     #get the provincial averages, the inputs are the province abbreviations such as ON for Ontario, BC for British Columbia, etc. Check the csv file for more info
-#     with open(csvFileInput) as csvFile:
-#         csv_reader = csv.reader(csvFile, delimiter=",")
-#         totalSalary = 0
-#         countPerson = 0
-#         for row in csv_reader:
-#             if (provinceName.upper() in row[2]): # check the desired province against the province column
-#                 salaryInt = row[4][1:].replace(",", "") #get the salary from the row and remove the comma from the string
-#                 salaryInt = salaryInt[0:len(salaryInt) - 3] # get rid of the useless parts of the string such that only int's left
-#                 if salaryInt[-1] == "C": # some inputs have "CAD" added to the integer so I gotta get rid of that too
-#                     continue
-#                 salaryInt = int(salaryInt)
-#                 totalSalary += salaryInt
-#                 countPerson += 1
-#         return int(totalSalary / countPerson)
-
 # Enhanced version of the calculateTotalAverageProvince with added readability and better comments.
 def calculateTotalAverageProvince(csvFileInput, province):
     # the input is a csv file and the province desired. Province abbreviation is used. ON for ONtario, AB for Alberta etc.
@@ -175,25 +156,3 @@ print("Ontario Average", calculateTotalAverageProvince("lastSubSep21.csv", "ON")
 print("Ontario Median Range", getRangeByProvince("lastSubSep21.csv", "ON")) #the format is ass
 print("Canada Median", getMedianCanada("lastSubSep21.csv")) #getMedianCanada appears to be working fine
 print("Ontario Median", getMedianProvince("lastSubSep21.csv", "ON")) #getMedianProvince works as expected
-
-# with open("salariesRedditSep23.csv") as csvFile:
-#     csv_reader = csv.reader(csvFile, delimiter=",")
-#     line_count = 0
-#     totalSalary = 0
-#     countPerson = 0
-#     for row in csv_reader:
-#         if ("Ontario" in row[2] and int(row[9][0:1]) >= 0 and int(row[9][0:1]) < 1 ):
-#             salaryInt = row[4][1:].replace(",", "")
-#             salaryInt = salaryInt[0:len(salaryInt) - 3]
-#             salaryInt = int(salaryInt)
-#             totalSalary += salaryInt
-#             countPerson += 1
-#             print(salaryInt)
-#             # try:
-#             #     if (float(row[9]) <= 1):
-#             #         print("tesing")
-#             #         #print(row[1], "Salary:" + row[4], row[5], row[6], row[8], "exp:" + row[9], row[10])
-#             # except:
-#             #     continue
-#     print(countPerson)
-#     print(totalSalary / countPerson)
