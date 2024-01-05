@@ -91,31 +91,31 @@ def calculateTotalAverageProvince(csvFileInput, province):
         return int(total_salary / count) if count > 0 else 0
 
 def getRangeByProvince(csvFileInput, provinceName):
+    # Calculate the median salary from a CSV file of Canadian SDE incomes.
+    # the input is a csv file
+    # the return value is a string showing the low median and the high median by province
+    with open(csvFileInput) as file:
+        csv_reader = csv.reader(file)
+        headers = next(csv_reader)  # Skip the header row
 
-    with open(csvFileInput) as csvFile:
-        next(csvFile)
-        csv_reader = csv.reader(csvFile, delimiter=",")
-        leastValue = math.inf
-        greatestValue = 0
+        salaryArray = []
         numberOfInputs = 0
         numberOfErrorInputs = 0
         for row in csv_reader:
             provinceField = row[2]
             salaryField = row[4]
-            salaryStr = salaryField[1:].replace(",", "").split('.')[0] #remove the dollar sign [1:] and replace the commas
+            salaryStr = salaryField[1:].replace(",", "").split('.')[
+                0]  # remove the dollar sign [1:] and replace the commas
             if (provinceName.upper() in provinceField):
                 numberOfInputs += 1
                 try:
                     salaryInt = int(salaryStr)
-                    if salaryInt > greatestValue:
-                        greatestValue = salaryInt
-                    if salaryInt < leastValue:
-                        leastValue = salaryInt
+                    salaryArray.append(salaryInt)
                 except ValueError:
                     numberOfErrorInputs += 1
                     print(f"Unable to convert salary '{salaryStr}' in row: {row}")
-    return "Median Range: " + str(leastValue) + " - " + str(greatestValue)
-
+        print(f"total number of inputs '{numberOfInputs}'. Number of ignored inputs {numberOfErrorInputs}")
+        return statistics.median(salaryArray)
 
 def getMedianCanada(csvFileInput):
     # Calculate the median salary from a CSV file of Canadian SDE incomes.
@@ -131,9 +131,7 @@ def getMedianCanada(csvFileInput):
             numberOfInputs += 1
             salaryField = row[4]
             salary_str = salaryField[1:].replace(",", "").split('.')[
-                0]  # remove the dollar sign [1:] and replace the commas
-            # and then get rid of whatever comes after the comma: split(".")[0]
-            salary_str = row[4][1:].replace(",", "").split('.')[0]
+                0] # remove the dollar sign [1:] and replace the commas
             try:
                 salary = int(salary_str)
                 salaryArray.append(salary)
@@ -143,14 +141,40 @@ def getMedianCanada(csvFileInput):
         print(f"total number of inputs '{numberOfInputs}'. Number of ignored inputs {numberOfErrorInputs}")
         return statistics.median(salaryArray)
 
-def getMedianProvince(csvFileInput, province):
+def getMedianProvince(csvFileInput, provinceName):
+    # the input is a csv file and the province desired. Province abbreviation is used. ON for ONtario, AB for Alberta etc.
+    # check the csv file for the province string format
+    # the output is an integer value of the provincial median pay
+
+    with open(csvFileInput) as file:
+        csv_reader = csv.reader(file)
+        headers = next(csv_reader)  # Skip the header row
+
+        salaryArray = []
+        numberOfInputs = 0
+        numberOfErrorInputs = 0
+        for row in csv_reader:
+            provinceField = row[2]
+            salaryField = row[4]
+            salaryStr = salaryField[1:].replace(",", "").split('.')[
+                0]  # remove the dollar sign [1:] and replace the commas
+            if (provinceName.upper() in provinceField):
+                numberOfInputs += 1
+                try:
+                    salaryInt = int(salaryStr)
+                    salaryArray.append(salaryInt)
+                except ValueError:
+                    numberOfErrorInputs += 1
+                    print(f"Unable to convert salary '{salaryStr}' in row: {row}")
+        print(f"total number of inputs '{numberOfInputs}'. Number of ignored inputs {numberOfErrorInputs}")
+        return statistics.median(salaryArray)
 
 
-#print("Canada Average", calculateTotalAverageCanada("lastSubSep21.csv")) # check the output for calculateTotalAverageCanada. It appears fine
-#print("Ontario Average", calculateTotalAverageProvince("lastSubSep21.csv", "ON")) # check the calculateTotalAverageProvince function. It appears to be workign fine
-#print("Ontario Range", getRangeByProvince("lastSubSep21.csv", "ON")) #the format is ass
-#print("Canada Median", getMedianCanada("lastSubSep21.csv")) getMedianCanada appears to be working fine
-#
+print("Canada Average", calculateTotalAverageCanada("lastSubSep21.csv")) # check the output for calculateTotalAverageCanada. It appears fine
+print("Ontario Average", calculateTotalAverageProvince("lastSubSep21.csv", "ON")) # check the calculateTotalAverageProvince function. It appears to be workign fine
+print("Ontario Median Range", getRangeByProvince("lastSubSep21.csv", "ON")) #the format is ass
+print("Canada Median", getMedianCanada("lastSubSep21.csv")) #getMedianCanada appears to be working fine
+print("Ontario Median", getMedianProvince("lastSubSep21.csv", "ON")) #getMedianProvince works as expected
 
 # with open("salariesRedditSep23.csv") as csvFile:
 #     csv_reader = csv.reader(csvFile, delimiter=",")
